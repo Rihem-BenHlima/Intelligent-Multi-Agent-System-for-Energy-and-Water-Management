@@ -27,7 +27,7 @@ This project delivers an end-to-end **Intelligent Multi-Agent System (MAS)** tha
 4. **Autonomous Multi-Agent Orchestration**: A deterministic state-graph architecture built with LangGraph coordinating specialized deterministic and generative agents over a unified shared state.
 5. **Interactive Full-Stack Platform**: Responsive React/TypeScript dashboard, automated PDF reporting engine, and an interactive natural-language assistant grounded in real-time telemetry.
 
----
+--- 
 
 ## 🏛️ System Architecture
 
