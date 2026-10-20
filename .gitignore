@@ -1,0 +1,115 @@
+# ============================================================================
+# Secrets — NEVER commit. Share the *.example templates instead.
+# ============================================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# ============================================================================
+# Data — raw meter/consumption readings and datasets (git-ignored)
+# ============================================================================
+*.csv
+*.csv.orig
+*.parquet
+*.sqlite
+*.db
+
+# ETL and output directories: ignore generated data & models, keep plots/metrics
+**/etl_output/*
+**/output/*
+!**/output/README.md
+!**/output/*.png
+!**/output/*summary.json
+!**/output/*loss*.json
+!**/output/feature*.json
+!**/output/final_feature_set.txt
+!**/output/feature_selection_report.txt
+
+# Dataset directories: keep directory READMEs
+energy_forecasting/etl/data/*
+!energy_forecasting/etl/data/README.md
+energy_anomaly_detection/dataset/*
+!energy_anomaly_detection/dataset/README.md
+water_forecasting/bdg2_office_water/*
+!water_forecasting/bdg2_office_water/README.md
+water_anomaly_detection/dataset/*
+!water_anomaly_detection/dataset/README.md
+
+# Anomaly detection model and results folders
+energy_anomaly_detection/model/*
+!energy_anomaly_detection/model/README.md
+energy_anomaly_detection/results/*
+!energy_anomaly_detection/results/README.md
+water_anomaly_detection/model/*
+water_anomaly_detection/results/*
+
+# ============================================================================
+# Trained models & artifacts — NEVER pushed
+# ============================================================================
+*.pkl
+*.pickle
+*.joblib
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.h5
+*.hdf5
+*.keras
+*.onnx
+*.cbm
+*.ubj
+*.npy
+*.npz
+*.tfevents.*
+**/tensorboard*/
+**/runs/
+
+# Specific pipeline model artifacts
+water_forecasting/training/**/model/*
+water_forecasting/training/ml/xgboost/model/*.json
+energy_forecasting/training/dl/*/output/*.pt
+
+# Latent dimension sweeps: ignore generated artifacts except plots and summary results
+**/latent_sweep*/*
+!energy_anomaly_detection/latent_sweep/results.csv
+!**/latent_sweep*/plots/
+!**/latent_sweep*/**/*.png
+!**/latent_sweep*/*.png
+catboost_info/
+**/catboost_info/
+*.log
+
+# Generated reports / training scratch
+**/reports/
+
+# ============================================================================
+# Environments & dependencies
+# ============================================================================
+venv/
+.venv/
+**/venv/
+env/
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+**/dist/
+
+# Python & testing caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
