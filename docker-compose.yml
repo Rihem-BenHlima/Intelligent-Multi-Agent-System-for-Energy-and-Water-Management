@@ -1,0 +1,142 @@
+# docker-compose.yml — Energy Management Multi-Agent System
+#
+# SECURITY MODEL (read before changing anything):
+#   * Every published port is bound to 127.0.0.1 — services are reachable ONLY
+#     from this machine, never from the LAN/Internet. To expose something on
+#     purpose, put a reverse proxy with TLS + auth in front of it; do NOT just
+#     remove the "127.0.0.1:" prefix.
+#   * No password has a default. If a required value is missing from .env,
+#     `docker-compose up` stops with an error (the ":?" syntax below) instead
+#     of silently starting with a weak password.
+#   * All secrets come from ./.env (copy .env.example -> .env, then edit every
+#     <<< MODIFY). Never put real secrets in this file.
+
+services:
+
+  # ─── MySQL ──────────────────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      # MODIFY (in .env): strong, unique passwords — generate with
+      #   python -c "import secrets; print(secrets.token_hex(24))"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE:-energy_mgmt}
+      MYSQL_USER:          ${MYSQL_USER:-admin}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+    ports:
+      # Loopback only. Host port is MYSQL_PORT from .env (default 3307).
+      - "127.0.0.1:${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      # Authenticated check (a bare ping succeeds even with a wrong password).
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Adminer (Database UI) — OPT-IN ─────────────────────────────────────────
+  # A web login page for your database: NOT started by default. Start it only
+  # when you need it:   docker-compose --profile tools up -d adminer
+  # and stop it afterwards: docker-compose stop adminer
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: "no"
+    profiles: ["tools"]
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - mysql
+
+  # ─── Redis Stack (Required for LangGraph AsyncRedisSaver) ───────────────────
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis
+    restart: unless-stopped
+    environment:
+      # Password-protects Redis (it has NONE by default). Set REDIS_PASSWORD in .env.
+      # Use letters/digits only (e.g. token_hex) — it is embedded in a URL below.
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+      REDIS_ARGS: "--requirepass ${REDIS_PASSWORD}"
+    ports:
+      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:8001:8001" # RedisInsight UI (optional, good for debugging) — loopback only
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── FastAPI Backend ─────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    env_file: .env
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DB=${MYSQL_DATABASE:-energy_mgmt}
+      - MYSQL_USER=${MYSQL_USER:-admin}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}@redis:6379/0
+      - ML_MODELS_DIR=/app/ml_models
+      # MODIFY: put your ANTHROPIC_API_KEY in the .env file (not here)
+    ports:
+      # Loopback only. The frontend (also on this machine) is the only client.
+      - "127.0.0.1:8000:8000"
+    volumes:
+      # Mount the trained ML models directory directly from this project root.
+      # NOTE: this exposes the whole project folder (incl. .env) read-only
+      # inside the backend container — acceptable for a local single-user setup.
+      - ./:/app/ml_models:ro
+      # Source code mount — changes reflect immediately (no rebuild needed)
+      - ./backend:/app
+      # Live .env mount — ANTHROPIC_API_KEY is read fresh from this file on
+      # every LLM call (see llm_service.py), not from the env_file/environment
+      # values above, which only get baked in when the container is
+      # recreated (docker-compose up), not on a plain restart. Mounted at
+      # /project.env so no stub file appears inside backend/.
+      - ./.env:/project.env:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ─── Vite + React Frontend ───────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # MODIFY VITE_API_URL in .env (URL the BROWSER uses to reach the backend)
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    container_name: frontend
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  redis_data:
