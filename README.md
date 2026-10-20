@@ -13,12 +13,6 @@
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 
-[🎬 Demo](demo/)
-
----
-
-![System Demonstration](assets/demo.gif)
-
 ---
 
 ## 📌 Project Overview
@@ -90,6 +84,23 @@ Rather than relying on a costly and non-deterministic single LLM orchestrator, e
 | **Chat Agent** | Generative LLM | Conversational co-pilot answering natural-language queries grounded in live database telemetry. |
 
 > **Cost & Latency Optimization**: Deterministic agents handle all numerical and data-retrieval steps with 0 token overhead. LLM agents operate with isolated, task-specific system prompts (~450–990 tokens), preventing prompt bloat and keeping per-call inference costs below \$0.01.
+
+---
+
+## 🎬 Platform Demonstration & Operational Walkthrough
+
+The following recording demonstrates the end-to-end multi-agent platform operating across its key user interfaces:
+
+![Platform Demonstration](assets/demo.gif)
+
+> 📹 *The full high-definition video recording is available in the [`demo/`](demo/) directory.*
+
+### Walkthrough Highlights
+
+* **Unified Monitoring Dashboard**: Live telemetry tracking for energy (kWh) and water (L/h), utility tariff tier calculations, and 7-day consumption history.
+* **24-Hour Day-Ahead Forecasting**: Real-time evaluation of predicted demand curves against incoming smart-meter streams, enabling proactive load balancing.
+* **Unsupervised Anomaly Detection & XAI**: Visual error-margin tracking from the LSTM Autoencoder, paired with on-the-fly Claude-generated root-cause hypotheses explaining the deviation.
+* **Interactive AI Assistant**: Conversational co-pilot querying the live LangGraph state to answer consumption questions, compute projected costs, and suggest immediate optimization measures.
 
 ---
 
