@@ -17,7 +17,7 @@
 
 ---
 
-![System Demonstration](./assets/demo.gif)
+![System Demonstration](assets/demo.gif)
 
 ---
 
