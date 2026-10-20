@@ -1,7 +1,7 @@
 """
 BiGRU model — Office Water Consumption Forecasting
 Sequence-to-one Bidirectional GRU trained on sliding windows (LOOKBACK=24h).
-Input: (batch, 24, n_features) → BiGRU(2 layers, hidden=96) → Linear(192→32→1).
+Input: (batch, 24, n_features) → BiGRU → Linear.
 Split: 70/15/15 chronological. Loss: MSE on raw L/h.
 Outputs: output/bigru_metrics.json, output/bigru_test_predictions.csv,
          model/bigru_model.pt, plots/bigru_loss_curve.png, plots/bigru_forecast_plot.png
@@ -33,7 +33,7 @@ MAX_SEARCH_LEVELS = 5
 OUTPUT_DIR_NAME = "output"
 
 # Hyperparameters
-LOOKBACK     =        # hours of history fed as sequence
+LOOKBACK     = 24     # hours of history fed as sequence
 HIDDEN_SIZE  =        # per direction; concatenated -> 192 into the head
 NUM_LAYERS   = 2      #layers sufficient
 BIDIRECTIONAL = True  # process the (fully historical) window both ways

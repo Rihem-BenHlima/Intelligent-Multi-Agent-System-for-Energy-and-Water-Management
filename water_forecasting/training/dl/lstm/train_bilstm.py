@@ -35,7 +35,7 @@ OUTPUT_DIR_NAME   = "output"
 # ---------------------------------------------------------------------------
 # Hyperparameters
 # ---------------------------------------------------------------------------
-LOOKBACK      =     # hours of history fed as sequence
+LOOKBACK      = 24  # hours of history fed as sequence
 HIDDEN_SIZE   =     # right-sized for ~12k training samples
 NUM_LAYERS    =     # 2 layers sufficient
 DROPOUT       =     # between BiLSTM layers — regularises against memorisation
