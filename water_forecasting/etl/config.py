@@ -24,12 +24,6 @@ MAX_SYNTHETIC_FRACTION = 0.05
 RATE_CAP_L_PER_H = 10000
 ZERO_RUN_GAP_HOURS = 96
 
-# Statistical spike detection (catches real-but-anomalous multi-hour events,
-# e.g. a genuine multi-day demand spike, that RATE_CAP_L_PER_H is too high to
-# ever catch). Flags an hour as a spike only if it is BOTH statistically
-# extreme for its (day-of-week, hour) slot AND practically large in absolute
-# terms — the absolute floor exists because near-zero-variance hours (deep
-# night) produce huge z-scores from a single trivial pulse otherwise.
 SPIKE_Z_THRESHOLD = 2.5
 SPIKE_MIN_ABS_L_PER_H = 200
 

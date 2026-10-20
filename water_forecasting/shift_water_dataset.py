@@ -13,15 +13,6 @@ df = pd.read_csv(input_file)
 # Convert datetime
 df["datetime"] = pd.to_datetime(df["datetime"])
 
-
-# US federal holidays that fall on a weekday currently read as building-closed
-# (near-zero, same as a weekend) because the source meter is a real US office.
-# Once shifted, that closure would land on an arbitrary weekday with no holiday
-# significance in the new calendar and look like unexplained noise. Fix: before
-# shifting, replace each such day's raw values with the nearest earlier (or, at
-# the series start, nearest later) non-holiday same-weekday's real readings, so
-# the raw series looks like a normal office year with no holiday signal baked
-# in. No "is_holiday" feature is added anywhere — this only corrects raw values.
 raw_years = range(df["datetime"].min().year, df["datetime"].max().year + 1)
 us_holidays = holidays.US(years=list(raw_years))
 weekday_holidays = sorted(pd.Timestamp(d) for d in us_holidays.keys() if d.weekday() < 5)

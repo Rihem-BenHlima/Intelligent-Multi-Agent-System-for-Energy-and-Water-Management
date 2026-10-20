@@ -33,18 +33,18 @@ MAX_SEARCH_LEVELS = 5
 OUTPUT_DIR_NAME = "output"
 
 # Hyperparameters
-LOOKBACK     = 24       # hours of history fed as sequence
-HIDDEN_SIZE  = 96       # per direction; concatenated -> 192 into the head
-NUM_LAYERS   = 2        # 2 layers sufficient; 3 adds parameters without benefit
-BIDIRECTIONAL = True    # process the (fully historical) window both ways
-DROPOUT      = 0.1    # between GRU layers — prevents memorisation
-BATCH_SIZE   = 64       # larger batches → smoother gradient estimates
-MAX_EPOCHS   = 150      # early stopping will terminate well before this
-LR           = 4e-4    # peak LR reached after warmup
-LR_START     = 1e-4    # initial LR at epoch 1 (warmup begins here)
-LR_MIN       = 1e-6    # floor LR at end of cosine decay
-WARMUP_EPOCHS = 3      # epochs to ramp LR from LR_START to LR
-ES_PATIENCE  = 15      # stop once val loss clearly plateaus
+LOOKBACK     =        # hours of history fed as sequence
+HIDDEN_SIZE  =        # per direction; concatenated -> 192 into the head
+NUM_LAYERS   = 2      #layers sufficient
+BIDIRECTIONAL = True  # process the (fully historical) window both ways
+DROPOUT      =        # between GRU layers — prevents memorisation
+BATCH_SIZE   =        # larger batches → smoother gradient estimates
+MAX_EPOCHS   =        # early stopping will terminate well before this
+LR           =        # peak LR reached after warmup
+LR_START     =        # initial LR at epoch 1 (warmup begins here)
+LR_MIN       =        # floor LR at end of cosine decay
+WARMUP_EPOCHS =       # epochs to ramp LR from LR_START to LR
+ES_PATIENCE  =        # stop once val loss clearly plateaus
 RANDOM_STATE = 42
 FORECAST_DAYS = 7
 
