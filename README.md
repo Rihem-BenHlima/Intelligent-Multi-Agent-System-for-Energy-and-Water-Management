@@ -93,8 +93,6 @@ The following recording demonstrates the end-to-end multi-agent platform operati
 
 ![Platform Demonstration](assets/demo.gif)
 
-## Demo
-
 <p align="center">
   <a href="demo/demo.mp4"><b>▶ Watch the full demo video</b></a>
 </p>
