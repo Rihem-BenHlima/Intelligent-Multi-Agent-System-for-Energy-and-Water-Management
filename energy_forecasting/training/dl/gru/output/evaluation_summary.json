@@ -1,0 +1,53 @@
+{
+  "model": "GRU-production-zero-reg",
+  "params": {
+    "lookback": 168,
+    "hidden_size": 64,
+    "num_layers": 2,
+    "batch_size": 48,
+    "lr": 0.0001,
+    "warmup_epochs": 2,
+    "cosine_epochs": 50,
+    "n_extra_channels": 2,
+    "huber_delta": 0.5,
+    "epochs": 50,
+    "patience": 10,
+    "use_dropout": false,
+    "weight_decay": 0.0,
+    "early_stopping": true,
+    "use_ema": false
+  },
+  "input_size": "len(feat_cols) + n_extra_channels",
+  "architecture": [
+    "Bidirectional_GRU(2 layer, no dropout)",
+    "TargetHistory+GenuineFlag input channels",
+    "LastHidden+LastInput skip",
+    "MLP(128+F+2 -> 64 -> 32 -> 1)",
+    "RobustScaler"
+  ],
+  "regularization": "NONE \u2014 empirically validated via ablation (dropout=0.2+wd=1e-4 degraded val loss by +11.9% and test R\u00b2 by -2.4%; see docstring)",
+  "split_method": "Test=final chronological 20%. Train/Val=blocked cyclic weekly assignment within preceding 80% dev pool.",
+  "target_scaling": {
+    "mean": 0.6608927815139857,
+    "std": 0.22737627272986882
+  },
+  "test_metrics": {
+    "r2": 0.9002876805013033,
+    "rmse": 0.07975695635269328,
+    "mae": 0.04434210998641891,
+    "smape": 5.994508826369875,
+    "cv_rmse": 12.05720617049206,
+    "nmbe": -3.203750583841796,
+    "mase": 0.3989245154337358
+  },
+  "naive_reference_metrics": {
+    "r2": 0.7586707040142039,
+    "rmse": 0.12407925745725677,
+    "mae": 0.05214154811179729,
+    "smape": 5.754080659654826,
+    "cv_rmse": 18.757601305998055,
+    "nmbe": 0.21599699288567029,
+    "mase": 0.4690922876884826
+  },
+  "device": "cuda"
+}

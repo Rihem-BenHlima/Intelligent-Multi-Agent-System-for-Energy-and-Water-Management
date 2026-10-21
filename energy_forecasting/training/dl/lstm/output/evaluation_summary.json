@@ -1,0 +1,51 @@
+{
+  "model": "LSTM-production-zero-reg",
+  "params": {
+    "lookback": 168,
+    "hidden_size": 64,
+    "num_layers": 2,
+    "batch_size": 48,
+    "lr": 0.0001,
+    "warmup_epochs": 2,
+    "cosine_epochs": 50,
+    "n_extra_channels": 2,
+    "huber_delta": 0.5,
+    "epochs": 50,
+    "patience": 10,
+    "weight_decay": 0.0,
+    "early_stopping": true
+  },
+  "input_size": "len(feat_cols) + n_extra_channels",
+  "architecture": [
+    "Bidirectional_LSTM(2 layer, no dropout)",
+    "TargetHistory+GenuineFlag input channels",
+    "LastHidden+LastInput skip",
+    "MLP(128+F+2 -> 64 -> 32 -> 1)",
+    "RobustScaler"
+  ],
+  "regularization": "NONE \u2014 empirically validated (no overfitting observed)",
+  "split_method": "Test=final chronological 20%. Train/Val=blocked cyclic weekly assignment within preceding 80% dev pool.",
+  "target_scaling": {
+    "mean": 0.6608927815139857,
+    "std": 0.22737627272986882
+  },
+  "test_metrics": {
+    "r2": 0.8916482336763939,
+    "rmse": 0.08314040975266447,
+    "mae": 0.04649653354413131,
+    "smape": 6.2213477097689225,
+    "cv_rmse": 12.568697544752952,
+    "nmbe": -3.7775061519452655,
+    "mase": 0.4183068220957931
+  },
+  "naive_reference_metrics": {
+    "r2": 0.7586707040142039,
+    "rmse": 0.12407925745725677,
+    "mae": 0.05214154811179729,
+    "smape": 5.754080659654826,
+    "cv_rmse": 18.757601305998055,
+    "nmbe": 0.21599699288567029,
+    "mase": 0.4690922876884826
+  },
+  "device": "cuda"
+}
