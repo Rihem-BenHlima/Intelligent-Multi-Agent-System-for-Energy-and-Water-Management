@@ -13,6 +13,16 @@
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 
+## Demo
+
+The following recording demonstrates the end-to-end multi-agent platform operating across its key user interfaces:
+
+![Platform Demonstration](assets/demo.gif)
+
+<p align="center">
+  <a href="demo/demo.mp4"><b>▶ Watch the full demo video</b></a>
+</p>
+
 ---
 
 ## 📌 Project Overview
@@ -84,18 +94,6 @@ Rather than relying on a costly and non-deterministic single LLM orchestrator, e
 | **Chat Agent** | Generative LLM | Conversational co-pilot answering natural-language queries grounded in live database telemetry. |
 
 > **Cost & Latency Optimization**: Deterministic agents handle all numerical and data-retrieval steps with 0 token overhead. LLM agents operate with isolated, task-specific system prompts (~450–990 tokens), preventing prompt bloat and keeping per-call inference costs below \$0.01.
-
----
-
-## 🎬 Platform Demonstration & Operational Walkthrough
-
-The following recording demonstrates the end-to-end multi-agent platform operating across its key user interfaces:
-
-![Platform Demonstration](assets/demo.gif)
-
-<p align="center">
-  <a href="demo/demo.mp4"><b>▶ Watch the full demo video</b></a>
-</p>
 
 ---
 
