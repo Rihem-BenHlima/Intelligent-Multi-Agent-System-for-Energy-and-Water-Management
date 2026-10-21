@@ -23,8 +23,6 @@ The following recording demonstrates the end-to-end multi-agent platform operati
   <a href="demo/demo.mp4"><b>▶ Watch the full demo video</b></a>
 </p>
 
----
-
 ## 📌 Project Overview
 
 Modern smart-meter infrastructures capture fine-grained consumption data at sub-minute intervals. However, conventional monitoring systems remain **passive visualizers**: they plot historical consumption but leave future demand planning, drift identification, and operational guidance entirely to human manual analysis.
